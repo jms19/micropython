@@ -149,6 +149,8 @@ SECTIONS
         *modsocket.o(.literal* .text*)
         *modonewire.o(.literal* .text*)
 
+        *(.literal.spiffs* .text.spiffs* .text.SPIFFS*)
+
         /* we put as much rodata as possible in this section */
         /* note that only rodata accessed as a machine word is allowed here */
         *py/qstr.o(.rodata.const_pool)

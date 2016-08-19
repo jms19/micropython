@@ -208,7 +208,6 @@ PY_O_BASENAME = \
 	../extmod/machine_pinbase.o \
 	../extmod/machine_pulse.o \
 	../extmod/machine_i2c.o \
-	../extmod/modussl_axtls.o \
 	../extmod/modurandom.o \
 	../extmod/modwebsocket.o \
 	../extmod/modwebrepl.o \
@@ -220,8 +219,11 @@ PY_O_BASENAME = \
 	../extmod/vfs_fat_file.o \
 	../extmod/vfs_fat_lexer.o \
 	../extmod/vfs_fat_misc.o \
+	../extmod/vfs_spiffs.o \
 	../extmod/moduos_dupterm.o \
 	../lib/embed/abort_.o \
+
+# Noo 	../extmod/modussl_axtls.o \
 
 # prepend the build destination prefix to the py object files
 PY_O = $(addprefix $(PY_BUILD)/, $(PY_O_BASENAME))

@@ -37,9 +37,9 @@
 #define MICROPY_PY_GC               (1)
 #define MICROPY_PY_ARRAY            (1)
 #define MICROPY_PY_ARRAY_SLICE_ASSIGN (1)
-#define MICROPY_PY_COLLECTIONS      (1)
-#define MICROPY_PY_COLLECTIONS_ORDEREDDICT (1)
-#define MICROPY_PY_MATH             (1)
+#define MICROPY_PY_COLLECTIONS      (0)
+#define MICROPY_PY_COLLECTIONS_ORDEREDDICT (0)
+#define MICROPY_PY_MATH             (0)
 #define MICROPY_PY_CMATH            (0)
 #define MICROPY_PY_IO               (1)
 #define MICROPY_PY_IO_FILEIO        (1)
@@ -51,8 +51,8 @@
 #define MICROPY_PY_UERRNO           (1)
 #define MICROPY_PY_UBINASCII        (1)
 #define MICROPY_PY_UCTYPES          (1)
-#define MICROPY_PY_UHASHLIB         (1)
-#define MICROPY_PY_UHASHLIB_SHA1    (1)
+#define MICROPY_PY_UHASHLIB         (0)
+#define MICROPY_PY_UHASHLIB_SHA1    (0)
 #define MICROPY_PY_UHEAPQ           (1)
 #define MICROPY_PY_UJSON            (1)
 #define MICROPY_PY_URANDOM          (1)
@@ -138,6 +138,7 @@ extern const struct _mp_obj_module_t uos_module;
 extern const struct _mp_obj_module_t mp_module_lwip;
 extern const struct _mp_obj_module_t mp_module_machine;
 extern const struct _mp_obj_module_t onewire_module;
+extern const struct _mp_obj_module_t mp_module_spiffs;
 
 #define MICROPY_PORT_BUILTIN_MODULES \
     { MP_OBJ_NEW_QSTR(MP_QSTR_esp), (mp_obj_t)&esp_module }, \
@@ -147,6 +148,7 @@ extern const struct _mp_obj_module_t onewire_module;
     { MP_OBJ_NEW_QSTR(MP_QSTR_network), (mp_obj_t)&network_module }, \
     { MP_OBJ_NEW_QSTR(MP_QSTR_utime), (mp_obj_t)&utime_module }, \
     { MP_OBJ_NEW_QSTR(MP_QSTR_uos), (mp_obj_t)&uos_module }, \
+	{ MP_ROM_QSTR(MP_QSTR_spiffs), MP_ROM_PTR(&mp_module_spiffs) }, \
     { MP_OBJ_NEW_QSTR(MP_QSTR_machine), (mp_obj_t)&mp_module_machine }, \
     { MP_OBJ_NEW_QSTR(MP_QSTR__onewire), (mp_obj_t)&onewire_module }, \
 

@@ -15,13 +15,19 @@ include ../py/py.mk
 
 INC +=  -I.
 INC +=  -I..
+INC +=  -I../spiffs/src
 INC += -I../lib/timeutils
 INC += -I$(BUILD)
 
 # compiler settings
 CWARN = -Wall -Werror
 CWARN += -Wpointer-arith -Wuninitialized
-CFLAGS = $(INC) $(CWARN) -ansi -std=gnu99 -DUNIX $(CFLAGS_MOD) $(COPT) $(CFLAGS_EXTRA)
+CFLAGS = -fdiagnostics-color $(INC) $(CWARN) -ansi -std=gnu99 -DUNIX $(CFLAGS_MOD) $(COPT) $(CFLAGS_EXTRA)
+
+# There are various not-qute-right formats in SPIFFS code
+build/../spiffs/src/%: CFLAGS += -Wno-error=format
+
+CFLAGS += -DSIMULATE_FLASH
 
 # Debugging/Optimization
 ifdef DEBUG
@@ -142,7 +148,10 @@ SRC_C = \
 	alloc.c \
 	coverage.c \
 	fatfs_port.c \
-	$(SRC_MOD)
+	$(SRC_MOD) \
+	$(SPIFFS_SRC)
+
+SPIFFS_SRC = $(wildcard ../spiffs/src/*.c)
 
 # Include builtin package manager in the standard build (and coverage)
 ifeq ($(PROG),micropython)

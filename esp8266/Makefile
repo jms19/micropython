@@ -3,8 +3,12 @@ include ../py/mkenv.mk
 # qstr definitions (must come before including py.mk)
 QSTR_DEFS = qstrdefsport.h #$(BUILD)/pins_qstr.h
 
-MICROPY_PY_USSL = 1
-MICROPY_SSL_AXTLS = 1
+# without 0ing SSLs
+#   text    data     bss     dec     hex filename
+# 544304    1040   57384  602728   93268 build/firmware.elf
+
+MICROPY_PY_USSL = 0
+MICROPY_SSL_AXTLS = 0
 
 # include py core make definitions
 include ../py/py.mk
@@ -28,6 +32,7 @@ INC += -I../lib/netutils
 INC += -I../lib/timeutils
 INC += -I$(BUILD)
 INC += -I$(ESP_SDK)/include
+INC += -I../spiffs/src
 
 # UART for "os" messages. 0 is normal UART as used by MicroPython REPL,
 # 1 is debug UART (tx only), -1 to disable.
@@ -39,8 +44,11 @@ CFLAGS_XTENSA = -fsingle-precision-constant -Wdouble-promotion \
 	-Wl,-EL -mlongcalls -mtext-section-literals -mforce-l32 \
 	-DLWIP_OPEN_SRC
 
-CFLAGS = $(INC) -Wall -Wpointer-arith -Werror -ansi -std=gnu99 -nostdlib -DUART_OS=$(UART_OS) \
+CFLAGS = $(INC) -Wall -Wpointer-arith -Werror -ansi -std=gnu99 -nostdlib -DUART_OS=$(UART_OS) -DESP8266 \
 	$(CFLAGS_XTENSA) $(CFLAGS_MOD) $(COPT) $(CFLAGS_EXTRA)
+
+# There are various not-qute-right formats in SPIFFS code
+build/../spiffs/src/%: CFLAGS += -Wno-error=format
 
 LDFLAGS = -nostdlib -T esp8266.ld -Map=$(@:.elf=.map) --cref
 LIBS = -L$(ESP_SDK)/lib -lmain -ljson -llwip_open -lpp -lnet80211 -lwpa -lphy -lnet80211 $(LDFLAGS_MOD)
@@ -49,6 +57,10 @@ LIBGCC_FILE_NAME = $(shell $(CC) $(CFLAGS) -print-libgcc-file-name)
 LIBS += -L$(dir $(LIBGCC_FILE_NAME)) -lgcc
 
 # Debugging/Optimization
+# ifeq JUSTG
+CFLAGS += -g
+# endif
+
 ifeq ($(DEBUG), 1)
 CFLAGS += -g
 COPT = -O0
@@ -87,7 +99,11 @@ SRC_C = \
 	ets_alt_task.c \
 	$(BUILD)/frozen.c \
 	fatfs_port.c \
-	axtls_helpers.c \
+    $(SPIFFS_SRC)
+
+# Nooo 	axtls_helpers.c \
+
+SPIFFS_SRC = $(wildcard ../spiffs/src/*.c)
 
 STM_SRC_C = $(addprefix stmhal/,\
 	pybstdio.c \
